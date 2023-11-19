@@ -81,25 +81,7 @@ export default {
     displayCurrentGameButton(index) {
       if (index < this.sequence.length) {
         this.activeElement = this.sequence[index];
-        let audio;
-        switch (this.sequence[index]) {
-          case 1: {
-            audio = new Audio(soundSrc1);
-            break;
-          }
-          case 2: {
-            audio = new Audio(soundSrc2);
-            break;
-          }
-          case 3: {
-            audio = new Audio(soundSrc3);
-            break;
-          }
-          default: {
-            audio = new Audio(soundSrc4);
-          }
-        }
-        audio.play();
+        this.playAudio(this.sequence[index]);
 
         setTimeout(() => {
           this.displayCurrentGameButton(index + 1);
@@ -111,12 +93,15 @@ export default {
     },
     gameButtonHandler(num) {
       if (this.isPlayerRestoreOrder) {
+        this.playAudio(num);
         if (this.sequence[0] === num) {
           this.sequence.shift();
           if (this.sequence.length === 0) {
             this.sequence = [];
             this.isPlayerRestoreOrder = false;
-            this.nextRound();
+            setTimeout(() => {
+              this.nextRound();
+            }, 1000);
           }
         } else {
           this.sequence = [];
@@ -131,6 +116,27 @@ export default {
       this.generateSequence();
       this.displayCurrentGameButton(0);
     },
+    playAudio(num) {
+      let audio;
+      switch (num) {
+        case 1: {
+          audio = new Audio(soundSrc1);
+          break;
+        }
+        case 2: {
+          audio = new Audio(soundSrc2);
+          break;
+        }
+        case 3: {
+          audio = new Audio(soundSrc3);
+          break;
+        }
+        default: {
+          audio = new Audio(soundSrc4);
+        }
+      }
+      audio.play();
+    }
   },
   watch: {
     mode(mode) {
